@@ -304,11 +304,42 @@ ORDER BY "COACH".experience_years DESC;
 -- 6-2 查詢：查詢每種專長的教練數量，並只列出教練數量最多的專長（需使用 group by, inner join 與 order by 與 limit 語法）
 -- 顯示須包含以下欄位： 專長名稱, coach_total
 
+SELECT
+	"SKILL".name AS "專長名稱",
+  COUNT(*) AS coach_total
+FROM "COACH_LINK_SKILL"
+INNER JOIN "SKILL" ON "SKILL".id = "COACH_LINK_SKILL".skill_id
+GROUP BY "SKILL".name
+ORDER BY coach_total DESC
+LIMIT 1;
+
 -- 6-3. 查詢：計算 11 月份組合包方案的銷售數量
 -- 顯示須包含以下欄位： 組合包方案名稱, 銷售數量
+
+SELECT 
+	"CREDIT_PACKAGE".name AS "組合包方案名稱",
+  COUNT(*) AS 銷售數量
+FROM "CREDIT_PURCHASE"
+INNER JOIN "CREDIT_PACKAGE" ON "CREDIT_PURCHASE".credit_package_id = "CREDIT_PACKAGE".id
+WHERE "CREDIT_PURCHASE".created_at >= '2024-11-01 00:00:00' 
+AND "CREDIT_PURCHASE".created_at <= '2024-11-30 23:59:59'
+GROUP BY "CREDIT_PACKAGE".name
 
 -- 6-4. 查詢：計算 11 月份總營收（使用 purchase_at 欄位統計）
 -- 顯示須包含以下欄位： 總營收
 
+SELECT
+	SUM(price_paid) AS 總營收
+FROM "CREDIT_PURCHASE"
+WHERE "CREDIT_PURCHASE".created_at >= '2024-11-01 00:00:00' 
+AND "CREDIT_PURCHASE".created_at <= '2024-11-30 23:59:59'
+
 -- 6-5. 查詢：計算 11 月份有預約課程的會員人數（需使用 Distinct，並用 created_at 和 status 欄位統計）
 -- 顯示須包含以下欄位： 預約會員人數
+
+SELECT 
+	COUNT(DISTINCT(user_id)) AS 預約會員人數
+FROM "COURSE_BOOKING"
+WHERE status != '課程已取消'
+AND "COURSE_BOOKING".created_at >= '2024-11-01 00:00:00' 
+AND "COURSE_BOOKING".created_at <= '2024-11-30 23:59:59'
