@@ -287,16 +287,17 @@ SELECT
 FROM "CREDIT_PURCHASE"
 INNER JOIN "USER" ON "CREDIT_PURCHASE".user_id = "USER".id
 WHERE "USER".email = 'wXlTq@hexschooltest.io'
-GROUP BY "CREDIT_PURCHASE".user_id
+GROUP BY "CREDIT_PURCHASE".user_id;
 
 -- 寫法二
-SELECT 
+
 SELECT 
 	"CREDIT_PURCHASE".user_id AS user_id,
 	SUM("CREDIT_PURCHASE".purchased_credits) - COUNT(DISTINCT ("COURSE_BOOKING".id)) AS remaining_credit
 FROM "CREDIT_PURCHASE"
 INNER JOIN "COURSE_BOOKING" ON "CREDIT_PURCHASE".user_id = "COURSE_BOOKING".user_id
-WHERE "COURSE_BOOKING".status = '上課
+WHERE "COURSE_BOOKING".status = '上課中'
+GROUP BY  "CREDIT_PURCHASE".user_id;
 
 -- ████████  █████   █     ███  
 --   █ █   ██    █  █     █     
